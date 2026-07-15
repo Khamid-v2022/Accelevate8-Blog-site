@@ -102,17 +102,94 @@ function accelevate_register_card_customizer( $wp_customize ) {
 add_action( 'customize_register', 'accelevate_register_card_customizer' );
 
 /**
+ * Register homepage hero copy settings.
+ *
+ * @param WP_Customize_Manager $wp_customize Customizer.
+ */
+function accelevate_register_hero_customizer( $wp_customize ) {
+	$defaults = function_exists( 'accelevate_hero_defaults' ) ? accelevate_hero_defaults() : array();
+
+	$wp_customize->add_section(
+		'accelevate_hero',
+		array(
+			'title'       => __( 'Accelevate Hero', 'mindful-living' ),
+			'description' => __( 'Edit homepage hero copy and hierarchy. Styles stay premium; text stays editable here.', 'mindful-living' ),
+			'priority'    => 35,
+		)
+	);
+
+	$fields = array(
+		'accelevate_hero_eyebrow'      => array(
+			'label'   => __( 'Eyebrow label', 'mindful-living' ),
+			'default' => isset( $defaults['eyebrow'] ) ? $defaults['eyebrow'] : 'Journal',
+			'type'    => 'text',
+		),
+		'accelevate_hero_title_before' => array(
+			'label'   => __( 'Title — before accent', 'mindful-living' ),
+			'default' => isset( $defaults['title_before'] ) ? $defaults['title_before'] : 'Grow with',
+			'type'    => 'text',
+		),
+		'accelevate_hero_title_accent' => array(
+			'label'   => __( 'Title — accent word', 'mindful-living' ),
+			'default' => isset( $defaults['title_accent'] ) ? $defaults['title_accent'] : 'intention',
+			'type'    => 'text',
+		),
+		'accelevate_hero_title_after'  => array(
+			'label'   => __( 'Title — after accent', 'mindful-living' ),
+			'default' => isset( $defaults['title_after'] ) ? $defaults['title_after'] : ', not urgency',
+			'type'    => 'text',
+		),
+		'accelevate_hero_text'         => array(
+			'label'   => __( 'Supporting text', 'mindful-living' ),
+			'default' => isset( $defaults['text'] ) ? $defaults['text'] : '',
+			'type'    => 'textarea',
+		),
+		'accelevate_hero_cta_label'    => array(
+			'label'   => __( 'Button label', 'mindful-living' ),
+			'default' => isset( $defaults['cta_label'] ) ? $defaults['cta_label'] : 'Explore the journal',
+			'type'    => 'text',
+		),
+		'accelevate_hero_cta_url'      => array(
+			'label'   => __( 'Button URL', 'mindful-living' ),
+			'default' => '',
+			'type'    => 'url',
+		),
+	);
+
+	foreach ( $fields as $id => $field ) {
+		$wp_customize->add_setting(
+			$id,
+			array(
+				'default'           => $field['default'],
+				'sanitize_callback' => ( 'textarea' === $field['type'] ) ? 'sanitize_textarea_field' : ( ( 'url' === $field['type'] ) ? 'esc_url_raw' : 'sanitize_text_field' ),
+				'transport'         => 'refresh',
+			)
+		);
+
+		$wp_customize->add_control(
+			$id,
+			array(
+				'label'   => $field['label'],
+				'section' => 'accelevate_hero',
+				'type'    => $field['type'],
+			)
+		);
+	}
+}
+add_action( 'customize_register', 'accelevate_register_hero_customizer' );
+
+/**
  * Output CSS variables from Customizer settings.
  */
 function accelevate_card_customizer_css() {
-	$lines      = absint( get_theme_mod( 'accelevate_card_title_lines', 2 ) );
-	$lines      = max( 1, min( 3, $lines ) );
-	$gap        = absint( get_theme_mod( 'accelevate_card_meta_gap', 8 ) );
-	$gap        = max( 0, min( 32, $gap ) );
-	$align      = (bool) get_theme_mod( 'accelevate_card_align_readmore', true );
-	$footer_mt  = $align ? 'auto' : '0';
+	$lines     = absint( get_theme_mod( 'accelevate_card_title_lines', 2 ) );
+	$lines     = max( 1, min( 3, $lines ) );
+	$gap       = absint( get_theme_mod( 'accelevate_card_meta_gap', 8 ) );
+	$gap       = max( 0, min( 32, $gap ) );
+	$align     = (bool) get_theme_mod( 'accelevate_card_align_readmore', true );
+	$footer_mt = $align ? 'auto' : '0';
 
-	$css = ':root{';
+	$css  = ':root{';
 	$css .= '--ml-card-title-lines:' . $lines . ';';
 	$css .= '--ml-card-meta-gap:' . $gap . 'px;';
 	$css .= '--ml-card-footer-mt:' . $footer_mt . ';';

@@ -65,6 +65,9 @@ if ($LASTEXITCODE -ne 0) { throw "Post import failed" }
 
 Set-Location $WpDir
 
+Write-Host "==> Creating company pages..."
+Invoke-Wp eval-file (Join-Path $Root "scripts\setup-company-pages.php") | Out-Null
+
 Write-Host "==> Creating navigation menu..."
 Invoke-Wp eval-file (Join-Path $Root "scripts\setup-menu.php") | Out-Null
 

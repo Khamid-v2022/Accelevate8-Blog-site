@@ -34,6 +34,24 @@ wp_update_nav_menu_item(
 	)
 );
 
+foreach ( array( 'about' => 'About Us', 'contact' => 'Contact Us' ) as $slug => $label ) {
+	$page = get_page_by_path( $slug );
+	if ( ! $page ) {
+		continue;
+	}
+	wp_update_nav_menu_item(
+		$menu_id,
+		0,
+		array(
+			'menu-item-title'     => $label,
+			'menu-item-object'    => 'page',
+			'menu-item-object-id' => $page->ID,
+			'menu-item-type'      => 'post_type',
+			'menu-item-status'    => 'publish',
+		)
+	);
+}
+
 $locations            = get_theme_mod( 'nav_menu_locations', array() );
 $locations['primary'] = (int) $menu_id;
 $locations['mobile']  = (int) $menu_id;
