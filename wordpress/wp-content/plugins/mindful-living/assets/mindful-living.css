@@ -470,14 +470,408 @@ body {
   color: #ffffff !important;
 }
 
-/* Legacy card selectors */
+/* Legacy card selectors — loop cards only (do not strip single-post padding) */
 .entry-loop-entry,
-.content-wrap article {
+.content-wrap article.loop-entry {
   background: var(--ml-surface);
   border: 1px solid var(--ml-border);
   border-radius: 14px;
   overflow: hidden;
   box-shadow: none;
+}
+
+/* Single post — padded editorial frame (Customizer: Appearance → Accelevate Single Post) */
+body.single-post .content-wrap > article.single-entry,
+body.single .content-wrap > article.single-entry {
+  background: var(--ml-surface);
+  border: 1px solid var(--ml-border);
+  border-radius: var(--ml-single-radius, 16px);
+  box-shadow: 0 18px 48px rgba(10, 10, 10, 0.07);
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+body.single-post .content-wrap > article.single-entry > .entry-content-wrap,
+body.single .content-wrap > article.single-entry > .entry-content-wrap,
+body.content-style-unboxed .content-wrap > article.single-entry > .entry-content-wrap {
+  padding: var(--ml-single-pad-y, 2.75rem) var(--ml-single-pad-x, 2.75rem) !important;
+  box-sizing: border-box;
+}
+
+body.single-post article.single-entry .entry-header {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.35rem;
+  border-bottom: 1px solid rgba(10, 10, 10, 0.06);
+}
+
+body.single-post article.single-entry .entry-taxonomies {
+  margin: 0 0 0.85rem;
+}
+
+body.single-post article.single-entry .entry-taxonomies a {
+  display: inline-block;
+  font-family: Inter, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ml-accent-blue);
+}
+
+body.single-post article.single-entry .entry-taxonomies a:hover {
+  color: var(--ml-ink);
+}
+
+body.single-post article.single-entry .entry-title {
+  margin: 0 0 0.85rem;
+  font-family: Inter, sans-serif;
+  font-size: clamp(1.75rem, 3.2vw, 2.45rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.22;
+  color: var(--ml-ink);
+}
+
+body.single-post article.single-entry .entry-meta {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  font-size: 0.88rem;
+  color: var(--ml-muted);
+}
+
+body.single-post article.single-entry .entry-content.single-content > *:first-child {
+  margin-top: 0;
+}
+
+body.single-post article.single-entry .entry-content.single-content > *:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 767px) {
+  body.single-post .content-wrap > article.single-entry > .entry-content-wrap,
+  body.single .content-wrap > article.single-entry > .entry-content-wrap,
+  body.content-style-unboxed .content-wrap > article.single-entry > .entry-content-wrap {
+    padding: var(--ml-single-pad-y-mobile, 1.5rem) var(--ml-single-pad-x-mobile, 1.25rem) !important;
+  }
+
+  body.single-post article.single-entry .entry-header {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+  }
+}
+
+/* Similar Posts — blog cards in Splide carousel */
+.ml-related {
+  margin-top: 2.75rem;
+  padding: 2.75rem 0 3rem;
+  background: linear-gradient(180deg, rgba(247, 247, 245, 0.35) 0%, #f3f3f0 100%);
+  border-top: 1px solid rgba(10, 10, 10, 0.06);
+}
+
+.ml-related__inner {
+  max-width: 1120px !important;
+  width: min(1120px, calc(100% - 2.5rem)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.ml-related__header {
+  margin: 0 0 1.5rem;
+  max-width: 36rem;
+}
+
+.ml-related__eyebrow {
+  margin: 0 0 0.45rem;
+  font-family: Inter, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ml-muted);
+}
+
+.ml-related__title,
+.ml-related .entry-related-title {
+  margin: 0;
+  font-family: Inter, sans-serif !important;
+  font-size: clamp(1.45rem, 2.4vw, 1.85rem) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  color: var(--ml-ink) !important;
+}
+
+.ml-related__title::after {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 2px;
+  margin-top: 0.75rem;
+  background: linear-gradient(90deg, var(--ml-accent-green), rgba(143, 212, 0, 0.15));
+  border-radius: 999px;
+}
+
+.ml-related__intro {
+  margin: 0.85rem 0 0;
+  font-family: Inter, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--ml-muted);
+}
+
+.ml-related__carousel {
+  position: relative;
+}
+
+.ml-related .splide__list {
+  align-items: stretch !important;
+}
+
+.ml-related .splide__slide {
+  height: auto !important;
+  display: flex !important;
+}
+
+.ml-related .splide__slide > .ml-post-card,
+.ml-related .splide__slide > .loop-entry {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.ml-related .splide__arrow {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  background: var(--ml-ink) !important;
+  opacity: 0.88 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 24px rgba(10, 10, 10, 0.18);
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.ml-related .splide__arrow:hover {
+  opacity: 1 !important;
+  background: #1a1a1a !important;
+  transform: scale(1.04);
+}
+
+.ml-related .splide__arrow svg {
+  fill: #ffffff !important;
+}
+
+.ml-related .splide__pagination {
+  margin-top: 1.15rem;
+  padding: 0;
+}
+
+.ml-related .splide__pagination__page {
+  width: 0.45rem;
+  height: 0.45rem;
+  background: rgba(10, 10, 10, 0.2);
+  opacity: 1;
+  transition: width 0.2s ease, background 0.2s ease;
+}
+
+.ml-related .splide__pagination__page.is-active {
+  width: 1.15rem;
+  border-radius: 999px;
+  background: var(--ml-ink);
+}
+
+.entry-related:not(.ml-related) {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  .ml-related {
+    margin-top: 2rem;
+    padding: 2rem 0 2.25rem;
+  }
+}
+
+/* Leave a Reply / comments — refined editorial frame */
+#comments.comments-area {
+  max-width: 1120px;
+  width: min(1120px, calc(100% - 2.5rem));
+  margin: 2.5rem auto 3rem;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+#comments .comment-respond,
+#respond.comment-respond {
+  background: var(--ml-surface);
+  border: 1px solid var(--ml-border);
+  border-radius: 16px;
+  box-shadow: 0 16px 42px rgba(10, 10, 10, 0.05);
+  padding: clamp(1.5rem, 3vw, 2.35rem);
+}
+
+#comments .comment-reply-title,
+#respond .comment-reply-title {
+  margin: 0 0 0.35rem;
+  font-family: Inter, sans-serif;
+  font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ml-ink);
+}
+
+#comments .comment-reply-title::after {
+  content: "";
+  display: block;
+  width: 2.25rem;
+  height: 2px;
+  margin-top: 0.7rem;
+  margin-bottom: 1.1rem;
+  background: linear-gradient(90deg, var(--ml-accent-green), rgba(143, 212, 0, 0.15));
+  border-radius: 999px;
+}
+
+#comments .comment-notes,
+#respond .comment-notes {
+  margin: 0 0 1.25rem;
+  font-family: Inter, sans-serif;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--ml-muted);
+}
+
+#comments .comment-form label,
+#respond .comment-form label,
+#comments .comment-form .float-label,
+#respond .comment-form .float-label {
+  font-family: Inter, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ml-muted);
+}
+
+#comments .comment-form input[type="text"],
+#comments .comment-form input[type="email"],
+#comments .comment-form input[type="url"],
+#comments .comment-form textarea,
+#respond .comment-form input[type="text"],
+#respond .comment-form input[type="email"],
+#respond .comment-form input[type="url"],
+#respond .comment-form textarea {
+  width: 100%;
+  border: 1px solid #e0e0da !important;
+  border-radius: 12px !important;
+  background: #fafaf8 !important;
+  color: var(--ml-ink);
+  font-family: Inter, sans-serif !important;
+  font-size: 0.95rem !important;
+  line-height: 1.5;
+  padding: 0.85rem 1rem !important;
+  box-shadow: none !important;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+#comments .comment-form textarea,
+#respond .comment-form textarea {
+  min-height: 9rem;
+  resize: vertical;
+  font-family: "Cormorant Garamond", Georgia, serif !important;
+  font-size: 1.15rem !important;
+  line-height: 1.7 !important;
+}
+
+#comments .comment-form input:focus,
+#comments .comment-form textarea:focus,
+#respond .comment-form input:focus,
+#respond .comment-form textarea:focus {
+  outline: none;
+  border-color: #c9c9c2 !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(143, 212, 0, 0.18) !important;
+}
+
+#comments .comment-input-wrap,
+#respond .comment-input-wrap {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem 1rem;
+}
+
+#comments .comment-form-cookies-consent,
+#respond .comment-form-cookies-consent {
+  margin: 1rem 0 1.25rem;
+  font-family: Inter, sans-serif;
+  font-size: 0.82rem;
+  color: var(--ml-muted);
+}
+
+#comments .form-submit,
+#respond .form-submit {
+  margin: 0;
+}
+
+#comments .form-submit input[type="submit"],
+#respond .form-submit input[type="submit"],
+#comments .form-submit .submit,
+#respond .form-submit .submit {
+  min-height: 48px;
+  padding: 0.8rem 1.6rem !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--ml-ink) !important;
+  color: #ffffff !important;
+  font-family: Inter, sans-serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(10, 10, 10, 0.14);
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+#comments .form-submit input[type="submit"]:hover,
+#respond .form-submit input[type="submit"]:hover {
+  background: #222222 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px rgba(10, 10, 10, 0.18);
+}
+
+#comments .comment-list {
+  list-style: none;
+  margin: 0 0 2rem;
+  padding: 0;
+}
+
+#comments .comment-list .comment {
+  background: var(--ml-surface);
+  border: 1px solid var(--ml-border);
+  border-radius: 14px;
+  padding: 1.25rem 1.35rem;
+  margin: 0 0 1rem;
+}
+
+#comments .comments-title {
+  font-family: Inter, sans-serif;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ml-ink);
+  margin: 0 0 1.25rem;
+}
+
+@media (max-width: 767px) {
+  #comments .comment-input-wrap,
+  #respond .comment-input-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  #comments .comment-respond,
+  #respond.comment-respond {
+    padding: 1.25rem;
+  }
 }
 
 .entry-title a {

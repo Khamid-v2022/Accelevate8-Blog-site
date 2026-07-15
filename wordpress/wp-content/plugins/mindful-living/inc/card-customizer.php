@@ -179,6 +179,103 @@ function accelevate_register_hero_customizer( $wp_customize ) {
 add_action( 'customize_register', 'accelevate_register_hero_customizer' );
 
 /**
+ * Register single-post layout settings under Appearance → Customize.
+ *
+ * @param WP_Customize_Manager $wp_customize Customizer.
+ */
+function accelevate_register_single_post_customizer( $wp_customize ) {
+	$wp_customize->add_section(
+		'accelevate_single_post',
+		array(
+			'title'       => __( 'Accelevate Single Post', 'mindful-living' ),
+			'description' => __( 'Padding, frame, and Similar Posts for individual articles. Post text stays editable in Posts — these options only change presentation.', 'mindful-living' ),
+			'priority'    => 42,
+		)
+	);
+
+	$wp_customize->add_setting(
+		'accelevate_single_pad_x',
+		array(
+			'default'           => 44,
+			'sanitize_callback' => function ( $value ) {
+				$value = absint( $value );
+				return max( 16, min( 80, $value ) );
+			},
+			'transport'         => 'refresh',
+		)
+	);
+
+	$wp_customize->add_control(
+		'accelevate_single_pad_x',
+		array(
+			'label'       => __( 'Horizontal padding (px)', 'mindful-living' ),
+			'description' => __( 'Space between the border and the text on left/right.', 'mindful-living' ),
+			'section'     => 'accelevate_single_post',
+			'type'        => 'number',
+			'input_attrs' => array(
+				'min'  => 16,
+				'max'  => 80,
+				'step' => 2,
+			),
+		)
+	);
+
+	$wp_customize->add_setting(
+		'accelevate_single_pad_y',
+		array(
+			'default'           => 44,
+			'sanitize_callback' => function ( $value ) {
+				$value = absint( $value );
+				return max( 16, min( 96, $value ) );
+			},
+			'transport'         => 'refresh',
+		)
+	);
+
+	$wp_customize->add_control(
+		'accelevate_single_pad_y',
+		array(
+			'label'       => __( 'Vertical padding (px)', 'mindful-living' ),
+			'description' => __( 'Space between the border and the text on top/bottom.', 'mindful-living' ),
+			'section'     => 'accelevate_single_post',
+			'type'        => 'number',
+			'input_attrs' => array(
+				'min'  => 16,
+				'max'  => 96,
+				'step' => 2,
+			),
+		)
+	);
+
+	$wp_customize->add_setting(
+		'accelevate_single_radius',
+		array(
+			'default'           => 16,
+			'sanitize_callback' => function ( $value ) {
+				$value = absint( $value );
+				return max( 0, min( 32, $value ) );
+			},
+			'transport'         => 'refresh',
+		)
+	);
+
+	$wp_customize->add_control(
+		'accelevate_single_radius',
+		array(
+			'label'       => __( 'Corner radius (px)', 'mindful-living' ),
+			'section'     => 'accelevate_single_post',
+			'type'        => 'number',
+			'input_attrs' => array(
+				'min'  => 0,
+				'max'  => 32,
+				'step' => 1,
+			),
+		)
+	);
+}
+add_action( 'customize_register', 'accelevate_register_single_post_customizer' );
+
+/**
  * Output CSS variables from Customizer settings.
  */
 function accelevate_card_customizer_css() {
@@ -189,10 +286,25 @@ function accelevate_card_customizer_css() {
 	$align     = (bool) get_theme_mod( 'accelevate_card_align_readmore', true );
 	$footer_mt = $align ? 'auto' : '0';
 
+	$pad_x  = absint( get_theme_mod( 'accelevate_single_pad_x', 44 ) );
+	$pad_x  = max( 16, min( 80, $pad_x ) );
+	$pad_y  = absint( get_theme_mod( 'accelevate_single_pad_y', 44 ) );
+	$pad_y  = max( 16, min( 96, $pad_y ) );
+	$radius = absint( get_theme_mod( 'accelevate_single_radius', 16 ) );
+	$radius = max( 0, min( 32, $radius ) );
+
+	$pad_x_m = max( 16, (int) round( $pad_x * 0.55 ) );
+	$pad_y_m = max( 16, (int) round( $pad_y * 0.55 ) );
+
 	$css  = ':root{';
 	$css .= '--ml-card-title-lines:' . $lines . ';';
 	$css .= '--ml-card-meta-gap:' . $gap . 'px;';
 	$css .= '--ml-card-footer-mt:' . $footer_mt . ';';
+	$css .= '--ml-single-pad-x:' . $pad_x . 'px;';
+	$css .= '--ml-single-pad-y:' . $pad_y . 'px;';
+	$css .= '--ml-single-pad-x-mobile:' . $pad_x_m . 'px;';
+	$css .= '--ml-single-pad-y-mobile:' . $pad_y_m . 'px;';
+	$css .= '--ml-single-radius:' . $radius . 'px;';
 	$css .= '}';
 
 	wp_add_inline_style( 'mindful-living-custom', $css );
