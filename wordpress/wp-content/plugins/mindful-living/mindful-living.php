@@ -12,6 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once __DIR__ . '/inc/archive-layout.php';
+require_once __DIR__ . '/inc/post-cards.php';
+require_once __DIR__ . '/inc/homepage-hero.php';
 
 /**
  * Get plugin logo URL if the file exists in assets/logos.
@@ -89,38 +91,6 @@ function mindful_living_footer_html( $content ) {
 	return '<div class="ml-footer-brand">' . $logo . '</div><p>© ' . esc_html( gmdate( 'Y' ) ) . ' Accelevate. Thoughtful ideas for a calmer, more intentional life.</p>';
 }
 add_filter( 'theme_mod_footer_html_content', 'mindful_living_footer_html' );
-
-/**
- * Fix homepage hero logo path at render time.
- *
- * @param string $content Post content.
- */
-function mindful_living_fix_homepage_logo( $content ) {
-	if ( ! is_front_page() ) {
-		return $content;
-	}
-
-	$logo = mindful_living_logo_img(
-		'white',
-		array(
-			'class' => 'ml-hero-logo-image',
-		)
-	);
-
-	if ( ! $logo ) {
-		return $content;
-	}
-
-	$figure = '<figure class="wp-block-image size-full ml-hero-logo">' . $logo . '</figure>';
-
-	return (string) preg_replace(
-		'#<figure class="wp-block-image size-full ml-hero-logo">.*?</figure>#s',
-		$figure,
-		$content,
-		1
-	);
-}
-add_filter( 'the_content', 'mindful_living_fix_homepage_logo', 20 );
 
 /**
  * Use clean archive/page titles without WordPress prefixes.
@@ -202,14 +172,14 @@ function mindful_living_enqueue_assets() {
 		'mindful-living-fonts',
 		'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap',
 		array(),
-		'1.3.1'
+		'1.5.2'
 	);
 
 	wp_enqueue_style(
 		'mindful-living-custom',
 		plugins_url( 'assets/mindful-living.css', __FILE__ ),
 		array( 'mindful-living-fonts' ),
-		'1.3.1'
+		'1.5.2'
 	);
 }
 add_action( 'wp_enqueue_scripts', 'mindful_living_enqueue_assets' );

@@ -79,10 +79,7 @@ function mindful_living_post_card_classes( $classes ) {
 	$index = (int) $GLOBALS['ml_card_index'];
 
 	$classes[] = 'ml-card-index-' . $index;
-
-	if ( 0 === $index % 8 ) {
-		$classes[] = 'ml-card-wide';
-	}
+	$classes[] = 'ml-post-card';
 
 	return $classes;
 }
@@ -154,7 +151,7 @@ function mindful_living_archive_category_pills() {
 add_action( 'kadence_before_main_content', 'mindful_living_archive_category_pills', 8 );
 
 /**
- * Keep archive listings in reverse chronological order.
+ * Keep archive listings newest-first in complete 4-column rows (8 posts = 2 rows).
  *
  * @param WP_Query $query Query.
  */
@@ -163,9 +160,10 @@ function mindful_living_archive_post_order( $query ) {
 		return;
 	}
 
-	if ( $query->is_home() || $query->is_category() || $query->is_archive() ) {
+	if ( $query->is_home() || $query->is_category() || $query->is_tag() || $query->is_archive() ) {
 		$query->set( 'orderby', 'date' );
 		$query->set( 'order', 'DESC' );
+		$query->set( 'posts_per_page', 8 );
 	}
 }
 add_action( 'pre_get_posts', 'mindful_living_archive_post_order' );
