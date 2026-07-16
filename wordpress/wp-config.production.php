@@ -73,7 +73,8 @@ $table_prefix = 'wp_';
 
 /* Add any custom values between this line and the "stop editing" line. */
 
-
+define( 'WP_HOME',    'https://accelevate8.com' );
+define( 'WP_SITEURL', 'https://accelevate8.com' );
 
 /**
  * For developers: WordPress debugging mode.

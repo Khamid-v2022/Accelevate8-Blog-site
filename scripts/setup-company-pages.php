@@ -5,16 +5,13 @@
  * @package Accelevate
  */
 
-$pages = array(
 	'about'          => array(
 		'title' => 'About Us',
-		'lead'  => 'Accelevate is a calm journal for intentional living — goals, habits, mindset, and reflection.',
-		'body'  => 'We write short, premium essays meant to be easy to read and easy to return to. Edit this page in wp-admin to tell your story in your own words.',
+		'file'  => __DIR__ . '/about-page-content.html',
 	),
 	'contact'        => array(
 		'title' => 'Contact Us',
-		'lead'  => 'Questions, partnerships, or a quiet note — we read every message with care.',
-		'body'  => 'Email us at hello@accelevate.com, or replace this section with more detail from the editor.',
+		'file'  => __DIR__ . '/contact-page-content.html',
 	),
 	'faq'            => array(
 		'title' => 'FAQs',
@@ -31,11 +28,15 @@ $pages = array(
 $template = file_get_contents( __DIR__ . '/simple-page-template.html' );
 
 foreach ( $pages as $slug => $data ) {
-	$content = str_replace(
-		array( 'PAGE_TITLE', 'PAGE_LEAD', 'PAGE_BODY' ),
-		array( $data['title'], $data['lead'], $data['body'] ),
-		$template
-	);
+	if ( ! empty( $data['file'] ) && file_exists( $data['file'] ) ) {
+		$content = file_get_contents( $data['file'] );
+	} else {
+		$content = str_replace(
+			array( 'PAGE_TITLE', 'PAGE_LEAD', 'PAGE_BODY' ),
+			array( $data['title'], $data['lead'], $data['body'] ),
+			$template
+		);
+	}
 
 	$existing = get_page_by_path( $slug );
 	if ( $existing ) {
