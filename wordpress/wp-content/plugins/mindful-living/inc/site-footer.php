@@ -72,15 +72,7 @@ function mindful_living_footer_html( $content ) {
 
 				<p class="ml-footer__tagline"><?php echo esc_html( get_bloginfo( 'description', 'display' ) ?: 'Thoughtful ideas for a calmer, more intentional life.' ); ?></p>
 
-				<div class="ml-footer__subscribe">
-					<p class="ml-footer__subscribe-title"><?php esc_html_e( 'Get calm updates in your inbox', 'mindful-living' ); ?></p>
-
-					<?php echo accelevate_render_subscribe_notices(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-
-					<?php echo accelevate_render_subscribe_form( array( 'context' => 'footer', 'field_id' => 'accelevate-subscribe-email' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-
-					<p class="ml-footer__legal-note"><?php esc_html_e( 'By entering your email, you agree to our Privacy Policy. No spam — just thoughtful notes.', 'mindful-living' ); ?></p>
-				</div>
+				<?php echo accelevate_newsletter_render_block( array( 'context' => 'footer' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
 
 			<div class="ml-footer__links">
@@ -141,40 +133,3 @@ function accelevate_footer_strip_form_breaks( $content ) {
 	);
 }
 add_filter( 'theme_mod_footer_html_content', 'accelevate_footer_strip_form_breaks', 30 );
-
-/**
- * Handle newsletter subscribe submissions.
- */
-function accelevate_handle_subscribe() {
-	$redirect = wp_get_referer() ? wp_get_referer() : home_url( '/' );
-
-	if (
-		! isset( $_POST['accelevate_subscribe_nonce'] ) ||
-		! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['accelevate_subscribe_nonce'] ) ), 'accelevate_subscribe' )
-	) {
-		wp_safe_redirect( add_query_arg( 'subscribe', 'error', $redirect ) );
-		exit;
-	}
-
-	$email = isset( $_POST['accelevate_email'] ) ? sanitize_email( wp_unslash( $_POST['accelevate_email'] ) ) : '';
-	if ( ! is_email( $email ) ) {
-		wp_safe_redirect( add_query_arg( 'subscribe', 'error', $redirect ) );
-		exit;
-	}
-
-	$list   = get_option( 'accelevate_subscribers', array() );
-	if ( ! is_array( $list ) ) {
-		$list = array();
-	}
-	$list[ $email ] = gmdate( 'c' );
-	update_option( 'accelevate_subscribers', $list, false );
-
-	$subject = '[Accelevate] New newsletter subscriber';
-	$body    = "A new subscriber joined the list:\n\n{$email}\n";
-	wp_mail( get_option( 'admin_email' ), $subject, $body );
-
-	wp_safe_redirect( add_query_arg( 'subscribe', 'sent', $redirect ) );
-	exit;
-}
-add_action( 'admin_post_nopriv_accelevate_subscribe', 'accelevate_handle_subscribe' );
-add_action( 'admin_post_accelevate_subscribe', 'accelevate_handle_subscribe' );

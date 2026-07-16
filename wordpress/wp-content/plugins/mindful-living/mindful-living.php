@@ -17,6 +17,7 @@ require_once __DIR__ . '/inc/homepage-hero.php';
 require_once __DIR__ . '/inc/card-customizer.php';
 require_once __DIR__ . '/inc/site-footer.php';
 require_once __DIR__ . '/inc/related-posts.php';
+require_once __DIR__ . '/inc/newsletter/bootstrap.php';
 require_once __DIR__ . '/inc/subscribe-form.php';
 require_once __DIR__ . '/inc/seo-social.php';
 require_once __DIR__ . '/inc/post-subscribe-cta.php';
@@ -153,14 +154,14 @@ function mindful_living_enqueue_assets() {
 		'mindful-living-fonts',
 		'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap',
 		array(),
-		'1.8.1'
+		'1.9.0'
 	);
 
 	wp_enqueue_style(
 		'mindful-living-custom',
 		plugins_url( 'assets/mindful-living.css', __FILE__ ),
 		array( 'mindful-living-fonts' ),
-		'1.8.1'
+		'1.9.0'
 	);
 }
 add_action( 'wp_enqueue_scripts', 'mindful_living_enqueue_assets' );
