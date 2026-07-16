@@ -36,11 +36,12 @@ function accelevate_newsletter_register_settings() {
 	) );
 
 	$fields = array(
-		'accelevate_aweber_account_id'   => 'sanitize_text_field',
-		'accelevate_aweber_list_id'      => 'sanitize_text_field',
-		'accelevate_aweber_client_id'    => 'sanitize_text_field',
-		'accelevate_aweber_access_token' => 'sanitize_text_field',
-		'accelevate_aweber_refresh_token'=> 'sanitize_text_field',
+		'accelevate_aweber_account_id'    => 'sanitize_text_field',
+		'accelevate_aweber_list_id'       => 'sanitize_text_field',
+		'accelevate_aweber_client_id'     => 'sanitize_text_field',
+		'accelevate_aweber_client_secret' => 'sanitize_text_field',
+		'accelevate_aweber_access_token'  => 'sanitize_text_field',
+		'accelevate_aweber_refresh_token' => 'sanitize_text_field',
 	);
 
 	foreach ( $fields as $key => $callback ) {
@@ -54,6 +55,22 @@ function accelevate_newsletter_register_settings() {
 add_action( 'admin_init', 'accelevate_newsletter_register_settings' );
 
 /**
+ * Track when an access token was last saved manually in admin.
+ *
+ * @param mixed  $value New option value.
+ * @param mixed  $old   Previous option value.
+ * @return mixed
+ */
+function accelevate_aweber_track_manual_token_save( $value, $old ) {
+	if ( is_string( $value ) && '' !== $value && $value !== $old ) {
+		accelevate_aweber_mark_token_refreshed();
+	}
+
+	return $value;
+}
+add_filter( 'pre_update_option_accelevate_aweber_access_token', 'accelevate_aweber_track_manual_token_save', 10, 2 );
+
+/**
  * Render settings page.
  */
 function accelevate_newsletter_settings_page() {
@@ -63,6 +80,7 @@ function accelevate_newsletter_settings_page() {
 
 	$configured = accelevate_aweber_is_configured();
 	$provider   = accelevate_newsletter_provider();
+	$last_sync  = get_option( 'accelevate_newsletter_last_status', array() );
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Accelevate Newsletter', 'mindful-living' ); ?></h1>
@@ -74,10 +92,64 @@ function accelevate_newsletter_settings_page() {
 			<div class="notice notice-warning"><p><?php esc_html_e( 'AWeber is not fully configured yet. Signups will temporarily fall back to local storage + admin email.', 'mindful-living' ); ?></p></div>
 		<?php endif; ?>
 
+		<?php if ( ! empty( $last_sync ) ) : ?>
+			<h2><?php esc_html_e( 'Last subscribe attempt', 'mindful-living' ); ?></h2>
+			<table class="widefat striped" style="max-width: 980px;">
+				<tbody>
+					<tr>
+						<th style="width:180px;"><?php esc_html_e( 'Time (UTC)', 'mindful-living' ); ?></th>
+						<td><?php echo esc_html( isset( $last_sync['time'] ) ? (string) $last_sync['time'] : '' ); ?></td>
+					</tr>
+					<tr>
+						<th><?php esc_html_e( 'Status', 'mindful-living' ); ?></th>
+						<td><?php echo esc_html( isset( $last_sync['status'] ) ? (string) $last_sync['status'] : '' ); ?></td>
+					</tr>
+					<tr>
+						<th><?php esc_html_e( 'Provider', 'mindful-living' ); ?></th>
+						<td><?php echo esc_html( isset( $last_sync['provider'] ) ? (string) $last_sync['provider'] : '' ); ?></td>
+					</tr>
+					<tr>
+						<th><?php esc_html_e( 'Source', 'mindful-living' ); ?></th>
+						<td><?php echo esc_html( isset( $last_sync['source'] ) ? (string) $last_sync['source'] : '' ); ?></td>
+					</tr>
+					<tr>
+						<th><?php esc_html_e( 'Email', 'mindful-living' ); ?></th>
+						<td><?php echo esc_html( isset( $last_sync['email'] ) ? (string) $last_sync['email'] : '' ); ?></td>
+					</tr>
+					<tr>
+						<th><?php esc_html_e( 'Result code', 'mindful-living' ); ?></th>
+						<td><?php echo esc_html( isset( $last_sync['message'] ) ? (string) $last_sync['message'] : '' ); ?></td>
+					</tr>
+					<tr>
+						<th><?php esc_html_e( 'Token refresh', 'mindful-living' ); ?></th>
+						<td>
+							<?php
+							if ( ! empty( $last_sync['refresh_attempted'] ) ) {
+								echo esc_html(
+									! empty( $last_sync['refresh_status'] )
+										? (string) $last_sync['refresh_status']
+										: __( 'attempted', 'mindful-living' )
+								);
+							} else {
+								esc_html_e( 'not needed', 'mindful-living' );
+							}
+							?>
+						</td>
+					</tr>
+					<tr>
+						<th><?php esc_html_e( 'Detail', 'mindful-living' ); ?></th>
+						<td><code style="white-space: pre-wrap;"><?php echo esc_html( isset( $last_sync['detail'] ) ? (string) $last_sync['detail'] : '' ); ?></code></td>
+					</tr>
+				</tbody>
+			</table>
+		<?php endif; ?>
+
 		<h2><?php esc_html_e( 'Setup steps', 'mindful-living' ); ?></h2>
 		<ol>
 			<li><?php esc_html_e( 'Install the official AWeber plugin (optional, for OAuth help) or create an app at AWeber Developer.', 'mindful-living' ); ?></li>
-			<li><?php esc_html_e( 'Authorize the app and paste Account ID, List ID, Client ID, Access Token, and Refresh Token below.', 'mindful-living' ); ?></li>
+			<li><?php esc_html_e( 'Paste tokens once. The plugin refreshes access tokens automatically in the background (about every 90 minutes) using the stored refresh token. You should not need to re-paste tokens for normal operation.', 'mindful-living' ); ?></li>
+			<li><?php esc_html_e( 'WordPress plugins should use a PKCE/public AWeber app. For PKCE, leave Client Secret blank. Use Client Secret only for confidential server apps.', 'mindful-living' ); ?></li>
+			<li><?php esc_html_e( 'Authorize the app and paste Account ID, List ID, Client ID, tokens, and Client Secret (if your app has one) below.', 'mindful-living' ); ?></li>
 			<li><?php esc_html_e( 'Set Provider to AWeber and save.', 'mindful-living' ); ?></li>
 		</ol>
 
@@ -105,6 +177,13 @@ function accelevate_newsletter_settings_page() {
 				<tr>
 					<th scope="row"><label for="accelevate_aweber_client_id"><?php esc_html_e( 'AWeber Client ID', 'mindful-living' ); ?></label></th>
 					<td><input name="accelevate_aweber_client_id" id="accelevate_aweber_client_id" type="text" class="regular-text" value="<?php echo esc_attr( get_option( 'accelevate_aweber_client_id', '' ) ); ?>" /></td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="accelevate_aweber_client_secret"><?php esc_html_e( 'AWeber Client Secret (optional)', 'mindful-living' ); ?></label></th>
+					<td>
+						<input name="accelevate_aweber_client_secret" id="accelevate_aweber_client_secret" type="password" class="regular-text" value="<?php echo esc_attr( get_option( 'accelevate_aweber_client_secret', '' ) ); ?>" autocomplete="new-password" />
+						<p class="description"><?php esc_html_e( 'Only needed for confidential OAuth apps. PKCE / public WordPress apps usually leave this blank.', 'mindful-living' ); ?></p>
+					</td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="accelevate_aweber_access_token"><?php esc_html_e( 'Access Token', 'mindful-living' ); ?></label></th>
