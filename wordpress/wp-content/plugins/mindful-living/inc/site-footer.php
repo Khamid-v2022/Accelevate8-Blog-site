@@ -59,8 +59,6 @@ function mindful_living_footer_html( $content ) {
 		$blog_url = home_url( '/blog/' );
 	}
 
-	$status = isset( $_GET['subscribe'] ) ? sanitize_key( wp_unslash( $_GET['subscribe'] ) ) : '';
-
 	ob_start();
 	?>
 	<div class="ml-footer">
@@ -77,15 +75,9 @@ function mindful_living_footer_html( $content ) {
 				<div class="ml-footer__subscribe">
 					<p class="ml-footer__subscribe-title"><?php esc_html_e( 'Get calm updates in your inbox', 'mindful-living' ); ?></p>
 
-					<?php if ( 'sent' === $status ) : ?>
-						<p class="ml-footer__notice is-success" role="status"><?php esc_html_e( 'Thanks — you are on the list.', 'mindful-living' ); ?></p>
-					<?php elseif ( 'error' === $status ) : ?>
-						<p class="ml-footer__notice is-error" role="alert"><?php esc_html_e( 'Please enter a valid email and try again.', 'mindful-living' ); ?></p>
-					<?php endif; ?>
+					<?php echo accelevate_render_subscribe_notices(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
-					<form class="ml-footer__form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>"><?php
-						wp_nonce_field( 'accelevate_subscribe', 'accelevate_subscribe_nonce' );
-						?><input type="hidden" name="action" value="accelevate_subscribe" /><label class="screen-reader-text" for="accelevate-subscribe-email"><?php esc_html_e( 'Email address', 'mindful-living' ); ?></label><input id="accelevate-subscribe-email" name="accelevate_email" type="email" required placeholder="<?php esc_attr_e( 'What is your email?', 'mindful-living' ); ?>" autocomplete="email" /><button type="submit"><?php esc_html_e( 'Subscribe', 'mindful-living' ); ?></button></form>
+					<?php echo accelevate_render_subscribe_form( array( 'context' => 'footer', 'field_id' => 'accelevate-subscribe-email' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
 					<p class="ml-footer__legal-note"><?php esc_html_e( 'By entering your email, you agree to our Privacy Policy. No spam — just thoughtful notes.', 'mindful-living' ); ?></p>
 				</div>
@@ -133,12 +125,12 @@ add_filter( 'theme_mod_footer_html_content', 'mindful_living_footer_html' );
  * @return string
  */
 function accelevate_footer_strip_form_breaks( $content ) {
-	if ( false === strpos( $content, 'ml-footer__form' ) ) {
+	if ( false === strpos( $content, 'ml-subscribe-form' ) && false === strpos( $content, 'ml-footer__form' ) ) {
 		return $content;
 	}
 
 	return (string) preg_replace_callback(
-		'#<form class="ml-footer__form"[^>]*>.*?</form>#s',
+		'#<form class="[^"]*ml-subscribe-form[^"]*"[^>]*>.*?</form>#s',
 		function ( $matches ) {
 			$html = $matches[0];
 			$html = preg_replace( '#<br\s*/?>#i', '', $html );
