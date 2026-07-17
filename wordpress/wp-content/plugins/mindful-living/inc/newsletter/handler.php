@@ -76,11 +76,16 @@ function accelevate_newsletter_handle_subscribe() {
 		? sanitize_key( wp_unslash( $_POST['accelevate_subscribe_context'] ) )
 		: 'unknown';
 
+	$tags = array( 'accelevate-' . $context );
+	if ( in_array( $context, array( 'post', 'footer' ), true ) ) {
+		$tags[] = 'blog';
+	}
+
 	$result = accelevate_newsletter_subscribe_email(
 		$email,
 		array(
 			'source' => $context,
-			'tags'   => array( 'accelevate-' . $context ),
+			'tags'   => $tags,
 		)
 	);
 
