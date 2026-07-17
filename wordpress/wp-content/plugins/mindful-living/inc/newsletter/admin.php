@@ -201,7 +201,7 @@ function accelevate_newsletter_settings_page() {
 		<h2><?php esc_html_e( 'Reuse the form anywhere', 'mindful-living' ); ?></h2>
 		<p><?php esc_html_e( 'Drop the same styled form into any page or post with the shortcode:', 'mindful-living' ); ?></p>
 		<code>[accelevate_subscribe layout="inline" title="Get calm updates in your inbox"]</code>
-		<p><?php esc_html_e( 'Card layout:', 'mindful-living' ); ?> <code>[accelevate_subscribe layout="card" eyebrow="Stay with us" title="Get calm updates in your inbox"]</code></p>
+		<p><?php esc_html_e( 'Card layout:', 'mindful-living' ); ?> <code>[accelevate_subscribe layout="card" eyebrow="Before you go" title="Let the next essay find you"]</code></p>
 	</div>
 	<?php
 }

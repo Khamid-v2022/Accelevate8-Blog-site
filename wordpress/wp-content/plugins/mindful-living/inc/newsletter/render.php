@@ -53,10 +53,12 @@ function accelevate_newsletter_render_form( $args = array() ) {
 	$args = wp_parse_args(
 		$args,
 		array(
-			'layout'   => 'inline',
-			'context'  => 'footer',
-			'field_id' => 'accelevate-subscribe-email',
-			'class'    => '',
+			'layout'      => 'inline',
+			'context'     => 'footer',
+			'field_id'    => 'accelevate-subscribe-email',
+			'class'       => '',
+			'placeholder' => '',
+			'button'      => '',
 		)
 	);
 
@@ -68,8 +70,12 @@ function accelevate_newsletter_render_form( $args = array() ) {
 		$classes .= ' ml-post-subscribe__form';
 	}
 
-	$placeholder = get_theme_mod( 'accelevate_subscribe_placeholder', __( 'What is your email?', 'mindful-living' ) );
-	$button      = get_theme_mod( 'accelevate_subscribe_button', __( 'Subscribe', 'mindful-living' ) );
+	$placeholder = $args['placeholder']
+		? $args['placeholder']
+		: get_theme_mod( 'accelevate_subscribe_placeholder', __( 'What is your email?', 'mindful-living' ) );
+	$button      = $args['button']
+		? $args['button']
+		: get_theme_mod( 'accelevate_subscribe_button', __( 'Subscribe', 'mindful-living' ) );
 
 	ob_start();
 	?>

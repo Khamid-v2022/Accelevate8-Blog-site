@@ -328,23 +328,31 @@ function accelevate_register_sharing_customizer( $wp_customize ) {
 	$cta_fields = array(
 		'accelevate_post_cta_eyebrow' => array(
 			'label'   => __( 'Post CTA eyebrow', 'mindful-living' ),
-			'default' => 'Stay with us',
+			'default' => 'Before you go',
 		),
 		'accelevate_post_cta_title'   => array(
 			'label'   => __( 'Post CTA title', 'mindful-living' ),
-			'default' => 'Get calm updates in your inbox',
+			'default' => 'Let the next essay find you',
 		),
 		'accelevate_post_cta_text'    => array(
 			'label'   => __( 'Post CTA supporting text', 'mindful-living' ),
-			'default' => 'New essays on intention, habits, and reflection — short enough for your morning coffee.',
+			'default' => 'If this one gave you something to sit with, there\'s more where it came from — calm, thoughtful reads delivered to your inbox. No noise, no pressure. Short enough for your morning coffee.',
 			'type'    => 'textarea',
 		),
+		'accelevate_post_cta_placeholder' => array(
+			'label'   => __( 'Post CTA field placeholder', 'mindful-living' ),
+			'default' => 'Email address',
+		),
+		'accelevate_post_cta_button' => array(
+			'label'   => __( 'Post CTA button label', 'mindful-living' ),
+			'default' => 'Join the journal',
+		),
 		'accelevate_subscribe_placeholder' => array(
-			'label'   => __( 'Subscribe field placeholder', 'mindful-living' ),
+			'label'   => __( 'Footer subscribe field placeholder', 'mindful-living' ),
 			'default' => 'What is your email?',
 		),
 		'accelevate_subscribe_button' => array(
-			'label'   => __( 'Subscribe button label', 'mindful-living' ),
+			'label'   => __( 'Footer subscribe button label', 'mindful-living' ),
 			'default' => 'Subscribe',
 		),
 	);
