@@ -2,9 +2,12 @@
 /**
  * Create company pages used by the footer (editable in wp-admin).
  *
+ * Usage: wp eval-file scripts/setup-company-pages.php
+ *
  * @package Accelevate
  */
 
+$pages = array(
 	'about'          => array(
 		'title' => 'About Us',
 		'file'  => __DIR__ . '/about-page-content.html',
@@ -15,13 +18,15 @@
 	),
 	'faq'            => array(
 		'title' => 'FAQs',
-		'lead'  => 'A few common questions about Accelevate and the journal.',
-		'body'  => 'How often do you publish? We release thoughtful essays regularly — start on the Blog page. Can I subscribe? Yes — use the subscribe form in the footer. Edit this page in wp-admin to refine the answers.',
+		'file'  => __DIR__ . '/faq-page-content.html',
 	),
 	'privacy-policy' => array(
 		'title' => 'Privacy Policy',
-		'lead'  => 'How we handle information when you visit Accelevate or join the newsletter.',
-		'body'  => 'We collect only what we need to run the site and newsletter (such as your email if you subscribe). We do not sell your information. Update this policy with your legal language before launch.',
+		'file'  => __DIR__ . '/privacy-policy-content.html',
+	),
+	'terms-of-use'   => array(
+		'title' => 'Terms of Use',
+		'file'  => __DIR__ . '/terms-of-use-content.html',
 	),
 );
 
@@ -72,4 +77,10 @@ foreach ( $pages as $slug => $data ) {
 	WP_CLI::log( "Created page: {$slug} (#{$id})" );
 }
 
-WP_CLI::success( 'Company pages ready (About, Contact, FAQ, Privacy Policy).' );
+// Register Privacy Policy page in WP settings when present.
+$privacy = get_page_by_path( 'privacy-policy' );
+if ( $privacy ) {
+	update_option( 'wp_page_for_privacy_policy', (int) $privacy->ID );
+}
+
+WP_CLI::success( 'Company pages ready (About, Contact, FAQ, Privacy Policy, Terms of Use).' );

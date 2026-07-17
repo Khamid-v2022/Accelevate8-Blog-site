@@ -94,8 +94,9 @@ function mindful_living_footer_html( $content ) {
 					<ul>
 						<li><a href="<?php echo esc_url( accelevate_page_url( 'about' ) ); ?>"><?php esc_html_e( 'About Us', 'mindful-living' ); ?></a></li>
 						<li><a href="<?php echo esc_url( accelevate_page_url( 'contact' ) ); ?>"><?php esc_html_e( 'Contact Us', 'mindful-living' ); ?></a></li>
-						<li><a href="<?php echo esc_url( accelevate_page_url( 'privacy-policy' ) ); ?>"><?php esc_html_e( 'Privacy Policy', 'mindful-living' ); ?></a></li>
 						<li><a href="<?php echo esc_url( accelevate_page_url( 'faq' ) ); ?>"><?php esc_html_e( 'FAQs', 'mindful-living' ); ?></a></li>
+						<li><a href="<?php echo esc_url( accelevate_page_url( 'privacy-policy' ) ); ?>"><?php esc_html_e( 'Privacy Policy', 'mindful-living' ); ?></a></li>
+						<li><a href="<?php echo esc_url( accelevate_page_url( 'terms-of-use' ) ); ?>"><?php esc_html_e( 'Terms of Use', 'mindful-living' ); ?></a></li>
 					</ul>
 				</nav>
 			</div>

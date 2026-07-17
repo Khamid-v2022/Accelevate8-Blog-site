@@ -1,6 +1,6 @@
 <?php
 /**
- * Update homepage + About/Contact page content (editable afterward in wp-admin).
+ * Update company page content (editable afterward in wp-admin).
  *
  * Usage: wp eval-file scripts/update-content-pages.php
  * Or: php -r "require 'wordpress/wp-load.php'; require 'scripts/update-content-pages.php';"
@@ -15,13 +15,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 $root = dirname( __DIR__ );
 
 $updates = array(
-	'about'   => array(
-		'title'   => 'About Us',
-		'file'    => $root . '/scripts/about-page-content.html',
+	'about'          => array(
+		'title' => 'About Us',
+		'file'  => $root . '/scripts/about-page-content.html',
 	),
-	'contact' => array(
-		'title'   => 'Contact Us',
-		'file'    => $root . '/scripts/contact-page-content.html',
+	'contact'        => array(
+		'title' => 'Contact Us',
+		'file'  => $root . '/scripts/contact-page-content.html',
+	),
+	'faq'            => array(
+		'title' => 'FAQs',
+		'file'  => $root . '/scripts/faq-page-content.html',
+	),
+	'privacy-policy' => array(
+		'title' => 'Privacy Policy',
+		'file'  => $root . '/scripts/privacy-policy-content.html',
+	),
+	'terms-of-use'   => array(
+		'title' => 'Terms of Use',
+		'file'  => $root . '/scripts/terms-of-use-content.html',
 	),
 );
 
@@ -57,6 +69,12 @@ foreach ( $updates as $slug => $data ) {
 		);
 		echo is_wp_error( $id ) ? $id->get_error_message() . "\n" : "Created page: {$slug} (#{$id})\n";
 	}
+}
+
+$privacy = get_page_by_path( 'privacy-policy' );
+if ( $privacy ) {
+	update_option( 'wp_page_for_privacy_policy', (int) $privacy->ID );
+	echo "Privacy Policy page registered (#{$privacy->ID})\n";
 }
 
 $home_file = $root . '/scripts/homepage-content.html';

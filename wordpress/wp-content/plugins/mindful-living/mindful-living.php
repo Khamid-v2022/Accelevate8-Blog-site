@@ -154,14 +154,14 @@ function mindful_living_enqueue_assets() {
 		'mindful-living-fonts',
 		'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap',
 		array(),
-		'1.9.4'
+		'1.9.7'
 	);
 
 	wp_enqueue_style(
 		'mindful-living-custom',
 		plugins_url( 'assets/mindful-living.css', __FILE__ ),
 		array( 'mindful-living-fonts' ),
-		'1.9.4'
+		'1.9.7'
 	);
 }
 add_action( 'wp_enqueue_scripts', 'mindful_living_enqueue_assets' );
