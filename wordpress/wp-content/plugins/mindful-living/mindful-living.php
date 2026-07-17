@@ -167,6 +167,36 @@ function mindful_living_enqueue_assets() {
 add_action( 'wp_enqueue_scripts', 'mindful_living_enqueue_assets' );
 
 /**
+ * Guard the block editor against a WP 7 / stale-asset mismatch.
+ *
+ * editor.min.js calls wp.dom.__unstableStripHTML. If CDN/host cache serves a
+ * mismatched dom bundle (or a plugin overwrites wp.dom), the editor crashes with:
+ * TypeError: __unstableStripHTML is not a function
+ */
+function accelevate_block_editor_dom_polyfill() {
+	if ( ! wp_script_is( 'wp-dom', 'registered' ) ) {
+		return;
+	}
+
+	$js = <<<'JS'
+(function () {
+	if (!window.wp || !wp.dom || typeof wp.dom.__unstableStripHTML === 'function') {
+		return;
+	}
+	wp.dom.__unstableStripHTML = function (html) {
+		var safe = typeof wp.dom.safeHTML === 'function' ? wp.dom.safeHTML(html || '') : String(html || '');
+		var doc = document.implementation.createHTMLDocument('');
+		doc.body.innerHTML = safe;
+		return doc.body.textContent || '';
+	};
+})();
+JS;
+
+	wp_add_inline_script( 'wp-dom', $js, 'after' );
+}
+add_action( 'enqueue_block_editor_assets', 'accelevate_block_editor_dom_polyfill', 1 );
+
+/**
  * Add editor stylesheet for consistent post editing.
  */
 function mindful_living_editor_styles() {
