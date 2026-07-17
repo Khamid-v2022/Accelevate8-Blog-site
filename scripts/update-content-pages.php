@@ -35,6 +35,10 @@ $updates = array(
 		'title' => 'Terms of Use',
 		'file'  => $root . '/scripts/terms-of-use-content.html',
 	),
+	'thank-you'      => array(
+		'title' => 'Thank You',
+		'file'  => $root . '/scripts/thank-you-page-content.html',
+	),
 );
 
 foreach ( $updates as $slug => $data ) {
@@ -75,6 +79,12 @@ $privacy = get_page_by_path( 'privacy-policy' );
 if ( $privacy ) {
 	update_option( 'wp_page_for_privacy_policy', (int) $privacy->ID );
 	echo "Privacy Policy page registered (#{$privacy->ID})\n";
+}
+
+$thanks = get_page_by_path( 'thank-you' );
+if ( $thanks ) {
+	update_option( 'accelevate_thank_you_page_id', (int) $thanks->ID );
+	echo "Thank You page registered (#{$thanks->ID})\n";
 }
 
 $home_file = $root . '/scripts/homepage-content.html';

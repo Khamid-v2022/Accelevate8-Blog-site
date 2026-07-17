@@ -51,6 +51,12 @@ function accelevate_newsletter_register_settings() {
 			'default'           => '',
 		) );
 	}
+
+	register_setting( 'accelevate_newsletter', 'accelevate_thank_you_page_id', array(
+		'type'              => 'integer',
+		'sanitize_callback' => 'absint',
+		'default'           => 0,
+	) );
 }
 add_action( 'admin_init', 'accelevate_newsletter_register_settings' );
 
@@ -81,6 +87,11 @@ function accelevate_newsletter_settings_page() {
 	$configured = accelevate_aweber_is_configured();
 	$provider   = accelevate_newsletter_provider();
 	$last_sync  = get_option( 'accelevate_newsletter_last_status', array() );
+	$thanks_id  = (int) get_option( 'accelevate_thank_you_page_id', 0 );
+	if ( ! $thanks_id ) {
+		$thanks_page = get_page_by_path( 'thank-you' );
+		$thanks_id   = $thanks_page ? (int) $thanks_page->ID : 0;
+	}
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Accelevate Newsletter', 'mindful-living' ); ?></h1>
@@ -164,6 +175,29 @@ function accelevate_newsletter_settings_page() {
 							<option value="local" <?php selected( $provider, 'local' ); ?>><?php esc_html_e( 'Local backup only', 'mindful-living' ); ?></option>
 						</select>
 						<p class="description"><?php esc_html_e( 'When AWeber is selected but not configured, signups still save locally so you do not lose leads.', 'mindful-living' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="accelevate_thank_you_page_id"><?php esc_html_e( 'Thank you page', 'mindful-living' ); ?></label></th>
+					<td>
+						<?php
+						wp_dropdown_pages(
+							array(
+								'name'              => 'accelevate_thank_you_page_id',
+								'id'                => 'accelevate_thank_you_page_id',
+								'echo'              => 1,
+								'show_option_none'  => __( '— Select —', 'mindful-living' ),
+								'option_none_value' => '0',
+								'selected'          => $thanks_id,
+							)
+						);
+						?>
+						<p class="description">
+							<?php esc_html_e( 'After a successful subscribe, visitors are sent here. Edit the page copy anytime under Pages.', 'mindful-living' ); ?>
+							<?php if ( $thanks_id ) : ?>
+								<a href="<?php echo esc_url( get_edit_post_link( $thanks_id ) ); ?>"><?php esc_html_e( 'Edit thank you page', 'mindful-living' ); ?></a>
+							<?php endif; ?>
+						</p>
 					</td>
 				</tr>
 				<tr>

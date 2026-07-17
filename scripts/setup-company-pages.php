@@ -28,6 +28,10 @@ $pages = array(
 		'title' => 'Terms of Use',
 		'file'  => __DIR__ . '/terms-of-use-content.html',
 	),
+	'thank-you'      => array(
+		'title' => 'Thank You',
+		'file'  => __DIR__ . '/thank-you-page-content.html',
+	),
 );
 
 $template = file_get_contents( __DIR__ . '/simple-page-template.html' );
@@ -83,4 +87,9 @@ if ( $privacy ) {
 	update_option( 'wp_page_for_privacy_policy', (int) $privacy->ID );
 }
 
-WP_CLI::success( 'Company pages ready (About, Contact, FAQ, Privacy Policy, Terms of Use).' );
+$thanks = get_page_by_path( 'thank-you' );
+if ( $thanks ) {
+	update_option( 'accelevate_thank_you_page_id', (int) $thanks->ID );
+}
+
+WP_CLI::success( 'Company pages ready (About, Contact, FAQ, Privacy Policy, Terms of Use, Thank You).' );

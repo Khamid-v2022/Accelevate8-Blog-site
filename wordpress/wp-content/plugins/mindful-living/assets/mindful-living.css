@@ -1902,9 +1902,10 @@ nav.pagination,
   }
 }
 
-/* Company pages — About / Contact */
+/* Company pages — About / Contact / Thank you */
 body.page-about .entry-hero,
-body.page-contact .entry-hero {
+body.page-contact .entry-hero,
+body.page-thank-you .entry-hero {
   display: none !important;
 }
 
@@ -1978,6 +1979,10 @@ body.page-contact .entry-hero {
 .ml-contact-item p,
 .ml-faq-item h3,
 .ml-faq-item p,
+.ml-thanks-step__title,
+.ml-thanks-step p,
+.ml-thanks-reads,
+.ml-thanks-signoff,
 .ml-page__closing {
   font-family: Inter, sans-serif !important;
 }
@@ -2053,6 +2058,103 @@ body.page-contact .entry-hero {
   margin: 0 0 0.45rem;
   color: var(--ml-muted);
   line-height: 1.65;
+}
+
+.ml-page--thanks {
+  max-width: 40rem;
+}
+
+.ml-thanks-steps {
+  margin: 0.5rem 0 0;
+}
+
+.ml-thanks-step {
+  border-top: 1px solid var(--ml-border);
+  padding: 1.35rem 0 0.55rem;
+}
+
+.ml-thanks-step:first-child {
+  border-top: 0;
+  padding-top: 0.25rem;
+}
+
+.ml-thanks-step__title {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin: 0 0 0.7rem !important;
+  font-family: Inter, sans-serif !important;
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.4 !important;
+  color: var(--ml-ink) !important;
+}
+
+.ml-thanks-step__num {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  margin-top: 0.05rem;
+  border-radius: 999px;
+  background: rgba(143, 212, 0, 0.18);
+  color: var(--ml-ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.ml-thanks-step p {
+  margin: 0 0 0.85rem !important;
+  font-size: 0.98rem !important;
+  line-height: 1.7 !important;
+  color: var(--ml-muted) !important;
+}
+
+.ml-thanks-reads {
+  list-style: none !important;
+  margin: 0.35rem 0 0.25rem !important;
+  padding: 0 !important;
+}
+
+.ml-thanks-reads li {
+  margin: 0 !important;
+  padding: 0 !important;
+  border-top: 1px solid var(--ml-border);
+}
+
+.ml-thanks-reads li:last-child {
+  border-bottom: 1px solid var(--ml-border);
+}
+
+.ml-thanks-reads a {
+  display: block;
+  padding: 0.85rem 0.1rem;
+  font-family: Inter, sans-serif !important;
+  font-size: 0.98rem !important;
+  font-weight: 500 !important;
+  color: var(--ml-ink) !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease, padding-left 0.15s ease;
+}
+
+.ml-thanks-reads a:hover {
+  color: #222222 !important;
+  padding-left: 0.35rem;
+}
+
+.ml-thanks-signoff {
+  margin: 0.35rem 0 1.75rem !important;
+  font-size: 1rem !important;
+  color: var(--ml-muted) !important;
+  font-style: italic;
+}
+
+.ml-thanks-actions {
+  margin: 0 !important;
 }
 
 .ml-belief h3 {

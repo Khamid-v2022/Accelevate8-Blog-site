@@ -10,6 +10,49 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Permalink for the subscribe thank-you page.
+ *
+ * @return string
+ */
+function accelevate_newsletter_thank_you_url() {
+	$page_id = (int) get_option( 'accelevate_thank_you_page_id', 0 );
+	if ( $page_id ) {
+		$url = get_permalink( $page_id );
+		if ( $url ) {
+			return $url;
+		}
+	}
+
+	$page = get_page_by_path( 'thank-you' );
+	if ( $page && 'publish' === $page->post_status ) {
+		return get_permalink( $page );
+	}
+
+	return '';
+}
+
+/**
+ * Soft noindex for the thank-you page (conversion destination, not a content page).
+ */
+function accelevate_newsletter_thank_you_noindex() {
+	if ( ! is_page() ) {
+		return;
+	}
+
+	$page_id  = (int) get_queried_object_id();
+	$thanks   = (int) get_option( 'accelevate_thank_you_page_id', 0 );
+	$is_slug  = is_page( 'thank-you' );
+	$is_opt   = $thanks && $page_id === $thanks;
+
+	if ( ! $is_slug && ! $is_opt ) {
+		return;
+	}
+
+	echo '<meta name="robots" content="noindex, follow" />' . "\n";
+}
+add_action( 'wp_head', 'accelevate_newsletter_thank_you_noindex', 1 );
+
+/**
  * Handle newsletter subscribe submissions.
  */
 function accelevate_newsletter_handle_subscribe() {
@@ -47,6 +90,12 @@ function accelevate_newsletter_handle_subscribe() {
 	}
 
 	do_action( 'accelevate_newsletter_subscribed', $email, $context );
+
+	$thanks = accelevate_newsletter_thank_you_url();
+	if ( $thanks ) {
+		wp_safe_redirect( $thanks );
+		exit;
+	}
 
 	wp_safe_redirect( add_query_arg( 'subscribe', 'sent', $redirect ) );
 	exit;
